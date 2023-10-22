@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>    
+    <form>
+        <h1 id="message"></h1>
+        <input type="text" name="name" placeholder="Name" required><br><br>
+        <input type="email" placeholder="email" name="email" required><br><br>
+        <input type="tel" placeholder="phone" name="phone" required><br><br>
+        <input type="hidden" id="submissionTime" name="submissionTime">
+        <input type="submit" id="sub">
+    </form>
+    <script>
+        let form = document.querySelector("form");
+        const submitBtn =  document.querySelector('#sub');
+        const statusEl =  document.querySelector('#message');
+        const submissionTimeInput = document.querySelector('#submissionTime');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitBtn.value = "Submitting...";
+            // Get the current date and time
+            const currentDateTime = new Date();
+    
+            // Format the date and time as a string (you can customize the format)
+            const formattedDateTime = currentDateTime.toLocaleString();
+    
+            // Set the value of the hidden input field
+            submissionTimeInput.value = formattedDateTime;
+
+            let data = new FormData(form);
+            console.log(data);
+            fetch('https://script.google.com/macros/s/AKfycbzpc8qQ1oOWZhHrjFZKuRSY-SDujdkFY7LA2quQ2L1pzMpq6flFYG9L9sEsCPe4i8IXWA/exec', {
+                method: "POST",
+                body: data
+            })
+            .then(resp => resp.text())
+            .then(data => {
+                statusEl.innerHTML = `${data}`
+                submitBtn.value = "Submit";                
+            })
+        })
+    </script>
+</body>
+</html>
+<!-- action="https://script.google.com/macros/s/AKfycbyZpltu_VHuMzbyKvQ3RdxwOqfOKbMXc6OjaX9GAVvABD1LyuyAw6xgSCoWuNt6FdTGeQ/exec" method="post" -->
